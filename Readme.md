@@ -1,7 +1,7 @@
 # Проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дорофеева Мария](https://up.htmlacademy.ru/ecmascript/13/user/1657623).
-* Наставник: `Неизвестно`.
+* Наставник: `Александр Тимоновский`.
 
 ---
 
