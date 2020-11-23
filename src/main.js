@@ -1,5 +1,4 @@
 import { createFilmCardTemplate } from "./view/film-card.js";
-import { createFilmPopupTemplate } from "./view/film-popup.js";
 import { createFilterTemplate } from "./view/filter.js";
 import { createMoreButton } from "./view/more-button.js";
 import { createRankTemplate } from "./view/rank.js";
@@ -18,6 +17,9 @@ render(headerElement, createRankTemplate(), `beforeend`);
 const siteMainElement = document.querySelector(".main");
 render(siteMainElement, createFilterTemplate(), `afterbegin`);
 render(siteMainElement, createSortTemplate(), `afterbegin`);
+
+const filmsElement = document.querySelector(".films-list");
+render(filmsElement, createMoreButton(), 'beforeend');
 
 const filmListContainerElement = document.querySelector(
   ".films-list__container"
