@@ -1,12 +1,12 @@
-import { createFilmCardTemplate } from "./view/film-card.js";
-import { createFilterTemplate } from "./view/filter.js";
-import { createMoreButton } from "./view/more-button.js";
-import { createRankTemplate } from "./view/rank.js";
-import { createSortTemplate } from "./view/sort.js";
-import { createFooterStatsTemplate } from "./view/footer-stats.js";
-import { createFilmPopupTemplate } from "./view/film-popup.js";
-import { generateFilters } from "./mock/filters.js";
-import { generateFilmCard } from "./mock/film-card.js";
+import {createFilmCardTemplate} from "./view/film-card.js";
+import {createFilterTemplate} from "./view/filter.js";
+import {createMoreButton} from "./view/more-button.js";
+import {createRankTemplate} from "./view/rank.js";
+import {createSortTemplate} from "./view/sort.js";
+import {createFooterStatsTemplate} from "./view/footer-stats.js";
+import {createFilmPopupTemplate} from "./view/film-popup.js";
+import {generateFilters} from "./mock/filters.js";
+import {generateFilmCard} from "./mock/film-card.js";
 
 const FILM_CARDS_COUNT = 5;
 const filmCards = new Array(FILM_CARDS_COUNT).fill().map(generateFilmCard);
@@ -27,11 +27,15 @@ const filmsElement = document.querySelector(`.films-list`);
 render(filmsElement, createMoreButton(), `beforeend`);
 
 const filmListContainerElement = document.querySelector(
-  `.films-list__container`
+    `.films-list__container`
 );
 
 for (let filmCard of filmCards) {
-  render(filmListContainerElement, createFilmCardTemplate(filmCard), `beforeend`);
+  render(
+      filmListContainerElement,
+      createFilmCardTemplate(filmCard),
+      `beforeend`
+  );
 }
 
 const filmCardPosters = document.querySelectorAll(`.film-card__poster`);
