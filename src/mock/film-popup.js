@@ -7,10 +7,6 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-const getRandomBoolean = () => {
-  return getRandomInteger(0, 1) === 1;
-};
-
 const getRandomFloat = (a = 0, b = 1.0) => {
   const lower = Math.min(a, b);
   const upper = Math.max(a, b);
@@ -48,10 +44,10 @@ const generatePoster = () => {
 };
 
 const generateDate = () => {
-  const maxYearsGap = 40;
-  const yearsGap = getRandomInteger(-maxYearsGap, 0);
+  const maxDaysGap = 5400;
+  const DaysGap = getRandomInteger(-maxDaysGap, 0);
 
-  return dayjs().add(yearsGap, `year`).format(`YYYY`);
+  return dayjs().add(DaysGap, `day`).format(`DD MMMM YYYY`);
 };
 
 const generateDuration = () => {
@@ -89,22 +85,12 @@ const generateDescription = () => {
   return descriptions[randomIndex];
 };
 
-const generateCommentsAmount = () => {
-  const comments = getRandomInteger(0, 10);
-  return comments;
+const generateAge = () => {
+  const age = getRandomInteger(0, 18);
+  return age;
 };
 
-const generateWatchList = () => {
-  return getRandomBoolean();
-};
-
-const generateWatched = (watchList) => {
-  const watched = watchList === true ? false : getRandomBoolean();
-  return watched;
-};
-
-export const generateFilmCard = () => {
-  const watchList = generateWatchList();
+export const generateFilmPopup = () => {
   return {
     title: generateTitle(),
     poster: generatePoster(),
@@ -113,9 +99,6 @@ export const generateFilmCard = () => {
     rating: generateRaiting(),
     genre: generateGenre(),
     description: generateDescription(),
-    commentsAmount: generateCommentsAmount(),
-    watchList,
-    watched: generateWatched(watchList),
-    favorite: getRandomBoolean(),
+    age: generateAge(),
   };
 };
