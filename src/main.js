@@ -8,7 +8,8 @@ import {createFilmPopupTemplate} from "./view/film-popup.js";
 import {generateFilters} from "./mock/filters.js";
 import {generateFilmCard} from "./mock/film-card.js";
 
-const FILM_CARDS_COUNT = 5;
+const FILM_CARDS_COUNT = 20;
+const FILM_CARDS_COUNT_INLINE = 5;
 const filmCards = new Array(FILM_CARDS_COUNT).fill().map(generateFilmCard);
 const filters = generateFilters(filmCards);
 
@@ -23,19 +24,42 @@ const siteMainElement = document.querySelector(`.main`);
 render(siteMainElement, createFilterTemplate(filters), `afterbegin`);
 render(siteMainElement, createSortTemplate(), `afterbegin`);
 
-const filmsElement = document.querySelector(`.films-list`);
-render(filmsElement, createMoreButton(), `beforeend`);
-
 const filmListContainerElement = document.querySelector(
     `.films-list__container`
 );
 
-for (let filmCard of filmCards) {
+const filmsElement = document.querySelector(`.films-list`);
+for (let i = 0; i < Math.min(filmCards.length, FILM_CARDS_COUNT_INLINE); i++) {
   render(
       filmListContainerElement,
-      createFilmCardTemplate(filmCard),
+      createFilmCardTemplate(filmCards[i]),
       `beforeend`
   );
+}
+
+if (FILM_CARDS_COUNT_INLINE < filmCards.length) {
+  let renderedFilmCount = FILM_CARDS_COUNT_INLINE;
+  render(filmsElement, createMoreButton(), `beforeend`);
+
+  const moreButton = filmsElement.querySelector(`.films-list__show-more`);
+  moreButton.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    filmCards
+      .slice(renderedFilmCount, renderedFilmCount + FILM_CARDS_COUNT_INLINE)
+      .forEach((filmCard) =>
+        render(
+            filmListContainerElement,
+            createFilmCardTemplate(filmCard),
+            `beforeend`
+        )
+      );
+
+    renderedFilmCount += FILM_CARDS_COUNT_INLINE;
+
+    if (renderedFilmCount >= filmCards.length) {
+      moreButton.remove();
+    }
+  });
 }
 
 const filmCardPosters = document.querySelectorAll(`.film-card__poster`);
