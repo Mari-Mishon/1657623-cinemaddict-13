@@ -1,4 +1,4 @@
-import { generateFilmPopup } from "../mock/film-popup";
+import {generateFilmPopup} from "../mock/film-popup";
 
 export const createFilmPopupTemplate = () => {
   const filmPopup = generateFilmPopup();
@@ -78,5 +78,4 @@ export const createFilmPopupTemplate = () => {
         <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
     </section>
   `;
-
 };
