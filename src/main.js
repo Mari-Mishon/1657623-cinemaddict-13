@@ -33,8 +33,10 @@ const renderPopup = () => {
     .querySelector(`.film-details__close-btn`)
     .addEventListener(`click`, () => {
       filmPopupView.removeElement();
+      document.body.classList.remove(`hide-overflow`);
     });
   document.addEventListener(`keydown`, onEscDown);
+  document.body.classList.add(`hide-overflow`);
   render(document.body, filmPopupView.getElement(), RenderPosition.BEFOREEND);
 };
 
@@ -47,6 +49,7 @@ const onEscDown = (evt) => {
     evt.preventDefault();
     document.querySelector(`.film-details`).remove();
     document.removeEventListener(`keydown`, onEscDown);
+    document.body.classList.remove(`hide-overflow`);
   }
 };
 
@@ -86,9 +89,7 @@ if (FILM_CARDS_COUNT_INLINE < filmCards.length) {
     evt.preventDefault();
     filmCards
       .slice(renderedFilmCount, renderedFilmCount + FILM_CARDS_COUNT_INLINE)
-      .forEach((filmCard) =>
-        renderFilmCard(filmCard)
-      );
+      .forEach((filmCard) => renderFilmCard(filmCard));
 
     renderedFilmCount += FILM_CARDS_COUNT_INLINE;
 
