@@ -7,7 +7,7 @@ import FooterStatsView from "./view/footer-stats.js";
 import FilmPopupView from "./view/film-popup.js";
 import {generateFilters} from "./mock/filters.js";
 import {generateFilmCard} from "./mock/film-card.js";
-import {render, RenderPosition} from "./utils.js";
+import {render, RenderPosition} from "./utils/render.js";
 
 const FILM_CARDS_COUNT = 20;
 const FILM_CARDS_COUNT_INLINE = 5;
@@ -28,13 +28,11 @@ render(siteMainElement, new SortView().getElement(), RenderPosition.AFTERBEGIN);
 
 const renderPopup = () => {
   const filmPopupView = new FilmPopupView();
-  filmPopupView
-    .getElement()
-    .querySelector(`.film-details__close-btn`)
-    .addEventListener(`click`, () => {
-      filmPopupView.removeElement();
-      document.body.classList.remove(`hide-overflow`);
-    });
+  filmPopupView.setCloseClickHandler(() => {
+    document.querySelector(`.film-details`).remove();
+    document.body.classList.remove(`hide-overflow`);
+  });
+
   document.addEventListener(`keydown`, onEscDown);
   document.body.classList.add(`hide-overflow`);
   render(document.body, filmPopupView.getElement(), RenderPosition.BEFOREEND);
@@ -53,20 +51,11 @@ const onEscDown = (evt) => {
   }
 };
 
-const addPopupEvent = (view, queryClass) => {
-  view
-    .getElement()
-    .querySelector(queryClass)
-    .addEventListener(`click`, () => {
-      renderPopup();
-    });
-};
-
 const renderFilmCard = (filmCard) => {
   const filmCardView = new FilmCardView(filmCard);
-  addPopupEvent(filmCardView, `.film-card__poster`);
-  addPopupEvent(filmCardView, `.film-card__title`);
-  addPopupEvent(filmCardView, `.film-card__comments`);
+  filmCardView.addPopupEvent(`.film-card__poster`, renderPopup);
+  filmCardView.addPopupEvent(`.film-card__title`, renderPopup);
+  filmCardView.addPopupEvent(`.film-card__comments`, renderPopup);
 
   render(
       filmListContainerElement,
@@ -85,8 +74,7 @@ if (FILM_CARDS_COUNT_INLINE < filmCards.length) {
   const showMoreButton = new MoreButtonView();
   render(filmsElement, showMoreButton.getElement(), RenderPosition.BEFOREEND);
 
-  showMoreButton.getElement().addEventListener(`click`, (evt) => {
-    evt.preventDefault();
+  showMoreButton.setClickHandler(() => {
     filmCards
       .slice(renderedFilmCount, renderedFilmCount + FILM_CARDS_COUNT_INLINE)
       .forEach((filmCard) => renderFilmCard(filmCard));
