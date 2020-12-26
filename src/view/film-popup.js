@@ -1,5 +1,5 @@
 import {generateFilmPopup} from "../mock/film-popup";
-import {createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 
 const createFilmPopupTemplate = () => {
   const filmPopup = generateFilmPopup();
@@ -11,7 +11,6 @@ const createFilmPopupTemplate = () => {
             <button
               class="film-details__close-btn"
               type="button"
-              onclick="document.querySelector('.film-details').remove()='none'"
             >
               close
             </button>
@@ -127,23 +126,25 @@ const createFilmPopupTemplate = () => {
   `;
 };
 
-export default class Popup {
+export default class Popup extends AbstractView {
   constructor() {
-    this._element = null;
+    super();
+    this._closeClickHandler = this._closeClickHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmPopupTemplate();
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  _closeClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.closeClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setCloseClickHandler(callback) {
+    this._callback.closeClick = callback;
+    this.getElement()
+      .querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, this._closeClickHandler);
   }
 }

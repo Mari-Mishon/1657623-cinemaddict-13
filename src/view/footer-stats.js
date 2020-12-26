@@ -1,5 +1,5 @@
 import {generateFooterStats} from "../mock/footer-stats.js";
-import {createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 
 const createFooterStatsTemplate = () => {
   const footerStats = generateFooterStats();
@@ -8,22 +8,8 @@ const createFooterStatsTemplate = () => {
   `;
 };
 
-export default class FooterStats {
-  constructor() {
-    this._element = null;
-  }
+export default class FooterStats extends AbstractView {
   getTemplate() {
     return createFooterStatsTemplate();
   }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
-  }
 }
-
