@@ -32,7 +32,6 @@ export default class FilmCard extends AbstractView {
     super();
     this._filmCard = filmCard;
     this._popupClickHandler = this._popupClickHandler.bind(this);
-
   }
   getTemplate() {
     return createFilmCardTemplate(this._filmCard);
@@ -40,13 +39,20 @@ export default class FilmCard extends AbstractView {
 
   _popupClickHandler(evt) {
     evt.preventDefault();
+    document.body.classList.add(`hide-overflow`);
     this._callback.renderPopup();
   }
 
-  addPopupEvent(queryClass, callback) {
+  addPopupEvent(queryClasses, callback) {
     this._callback.renderPopup = callback;
-    this.getElement()
-      .querySelector(queryClass)
-      .addEventListener(`click`, this._popupClickHandler);
+    for (let queryClass of queryClasses) {
+      this.getElement()
+        .querySelector(queryClass)
+        .addEventListener(`click`, this._popupClickHandler);
+    }
   }
+
+  setWatchlistHandler() {}
+  setAlreadyWatchedHandler() {}
+  setFavouriteHandler() {}
 }

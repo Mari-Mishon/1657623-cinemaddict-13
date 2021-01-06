@@ -126,13 +126,29 @@ const createFilmPopupTemplate = () => {
   `;
 };
 
+const onEscDown = (evt) => {
+  if (evt.key === `Escape` || evt.key === `Esc`) {
+    evt.preventDefault();
+    document.querySelector(`.film-details`).remove();
+    document.removeEventListener(`keydown`, onEscDown);
+    document.body.classList.remove(`hide-overflow`);
+  }
+};
+
 export default class Popup extends AbstractView {
   constructor() {
     super();
     this._closeClickHandler = this._closeClickHandler.bind(this);
   }
 
+  init() {
+    document.addEventListener(`keydown`, onEscDown);
+    // TODO запись данных
+    // this.filmDetails = filmDetails
+  }
+
   getTemplate() {
+    // TODO     return createFilmPopupTemplate(this.filmDetails);
     return createFilmPopupTemplate();
   }
 
@@ -146,5 +162,9 @@ export default class Popup extends AbstractView {
     this.getElement()
       .querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, this._closeClickHandler);
+  }
+
+  setEscClickHandler(callback) {
+    this._callback.closeClick = callback;
   }
 }

@@ -10,6 +10,14 @@ const createFilterItemTemplate = (filter, isChecked) => {
       </div> 
   `;
 };
+const cardToFilterMap = {
+  Watchlist: (filmCards) =>
+    filmCards.filter((filmCard) => filmCard.watchList).length,
+  History: (filmCards) =>
+    filmCards.filter((filmCard) => filmCard.watched).length,
+  Favorites: (filmCards) =>
+    filmCards.filter((filmCard) => filmCard.favorite).length,
+};
 
 export const createFilterTemplate = (filterItems) => {
   const filterItemsTemplate = filterItems
@@ -25,9 +33,16 @@ export const createFilterTemplate = (filterItems) => {
 };
 
 export default class Filter extends AbstractView {
-  constructor(filters) {
+  constructor(filmCards) {
     super();
-    this._filters = filters;
+    this._filters = Object.entries(cardToFilterMap).map(
+        ([filterName, filterFunction]) => {
+          return {
+            name: filterName,
+            count: filterFunction(filmCards),
+          };
+        }
+    );
   }
 
   getTemplate() {
