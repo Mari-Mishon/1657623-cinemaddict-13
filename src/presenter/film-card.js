@@ -65,6 +65,9 @@ export default class FilmCard {
 
   _renderPopup() {
     this._filmPopupView.init();
+
+    document.body.classList.add(`hide-overflow`);
+
     render(
         document.body,
         this._filmPopupView.getElement(),
@@ -73,6 +76,9 @@ export default class FilmCard {
   }
 
   _handlePopupClick() {
+    if (document.querySelector(`.film-details`) !== null) {
+      this._filmPopupView.closePopup();
+    }
     return this._renderPopup();
   }
 

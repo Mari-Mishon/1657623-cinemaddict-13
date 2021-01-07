@@ -152,6 +152,12 @@ export default class Popup extends AbstractView {
     return createFilmPopupTemplate();
   }
 
+  closePopup() {
+    document.querySelector(`.film-details`).remove();
+    document.removeEventListener(`keydown`, onEscDown);
+    document.body.classList.remove(`hide-overflow`);
+  }
+
   _closeClickHandler(evt) {
     evt.preventDefault();
     this._callback.closeClick();
