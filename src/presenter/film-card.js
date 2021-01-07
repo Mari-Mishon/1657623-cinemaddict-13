@@ -1,26 +1,36 @@
 import FilmCardView from "../view/film-card.js";
 import FilmPopupView from "../view/film-popup.js";
-import {render, RenderPosition} from "../utils/render.js";
+import {remove, render, RenderPosition, replace} from "../utils/render.js";
 
 export default class FilmCard {
-  constructor(filmsContainer) {
-    this._filmsContainer = filmsContainer;
+  constructor(filmsContainer, updateInitHandler) {
+    this.filmsContainer = filmsContainer;
+    this._updateInitHandler = updateInitHandler;
+
+    this._filmCardView = null;
 
     this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
-    this._handleAlreadyWathedClick = this._handleAlreadyWathedClick.bind(this);
-    this._handleFavouriteClick = this._handleFavouriteClick.bind(this);
+    this._handleAlreadyWatchedClick = this._handleAlreadyWatchedClick.bind(
+        this
+    );
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
 
     this._handlePopupClick = this._handlePopupClick.bind(this);
   }
 
   init(filmCard) {
+    const prevFilmCardView = this._filmCardView;
+    this._filmCard = filmCard;
+
     this._filmPopupView = new FilmPopupView();
 
     this._filmCardView = new FilmCardView(filmCard);
 
     this._filmCardView.setWatchlistHandler(this._handleWatchlistClick);
-    this._filmCardView.setAlreadyWatchedHandler(this._handleAlreadyWathedClick);
-    this._filmCardView.setFavouriteHandler(this._handleFavouriteClick);
+    this._filmCardView.setAlreadyWatchedHandler(
+        this._handleAlreadyWatchedClick
+    );
+    this._filmCardView.setFavoriteHandler(this._handleFavoriteClick);
 
     this._filmCardView.addPopupEvent(
         [`.film-card__title`, `.film-card__poster`, `.film-card__comments`],
@@ -37,7 +47,20 @@ export default class FilmCard {
       document.body.classList.remove(`hide-overflow`);
     });
 
-    render(this._filmsContainer, this._filmCardView, RenderPosition.BEFOREEND);
+    if (prevFilmCardView === null) {
+      render(this.filmsContainer, this._filmCardView, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    if (this.filmsContainer.contains(prevFilmCardView.getElement())) {
+      replace(this._filmCardView, prevFilmCardView);
+    }
+
+    remove(prevFilmCardView);
+  }
+
+  destroy() {
+    remove(this._filmCardView);
   }
 
   _renderPopup() {
@@ -54,8 +77,26 @@ export default class FilmCard {
   }
 
   _handleWatchlistClick() {
-    // Логика при нажатии на watchlist
+    this._updateInitHandler(
+        Object.assign({}, this._filmCard, {
+          watchList: !this._filmCard.watchList,
+        })
+    );
   }
-  _handleAlreadyWathedClick() {}
-  _handleFavouriteClick() {}
+
+  _handleAlreadyWatchedClick() {
+    this._updateInitHandler(
+        Object.assign({}, this._filmCard, {
+          watched: !this._filmCard.watched,
+        })
+    );
+  }
+
+  _handleFavoriteClick() {
+    this._updateInitHandler(
+        Object.assign({}, this._filmCard, {
+          favorite: !this._filmCard.favorite,
+        })
+    );
+  }
 }

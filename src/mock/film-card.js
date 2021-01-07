@@ -3,6 +3,9 @@ import {getRandomInteger} from "../utils/common.js";
 import {getRandomBoolean} from "../utils/common.js";
 import {getRandomFloat} from "../utils/common.js";
 
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
+
 const generateTitle = () => {
   const titles = [
     `Престиж`,
@@ -92,6 +95,7 @@ const generateWatched = (watchList) => {
 export const generateFilmCard = () => {
   const watchList = generateWatchList();
   return {
+    id: generateId(),
     title: generateTitle(),
     poster: generatePoster(),
     releaseDate: generateDate(),
