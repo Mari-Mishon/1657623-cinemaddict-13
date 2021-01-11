@@ -11,7 +11,7 @@ const createFilmCardTemplate = (filmCard) => {
       </p>
       <img src="${filmCard.poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${filmCard.description}</p>
-      <a class="film-card__comments">${filmCard.commentsAmount} comments</a>
+      <a class="film-card__comments">${filmCard.comments.length} comments</a>
       <div class="film-card__controls">
         <button class="film-card__controls-item button ${
   filmCard.watchList ? `film-card__controls-item--active` : ``
