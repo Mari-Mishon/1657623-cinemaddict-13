@@ -31,30 +31,16 @@ export default class FilmCard extends AbstractView {
   constructor(filmCard) {
     super();
     this._filmCard = filmCard;
-    this._popupClickHandler = this._popupClickHandler.bind(this);
     this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
     this._alreadyWatchedClickHandler = this._alreadyWatchedClickHandler.bind(
         this
     );
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._popupClickHandler = this._popupClickHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmCardTemplate(this._filmCard);
-  }
-
-  _popupClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.renderPopup();
-  }
-
-  addPopupEvent(queryClasses, callback) {
-    this._callback.renderPopup = callback;
-    for (let queryClass of queryClasses) {
-      this.getElement()
-        .querySelector(queryClass)
-        .addEventListener(`click`, this._popupClickHandler);
-    }
   }
 
   _watchlistClickHandler(evt) {
@@ -91,5 +77,19 @@ export default class FilmCard extends AbstractView {
     this.getElement()
       .querySelector(`.film-card__controls-item--favorite`)
       .addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  _popupClickHandler(evt, filmCard) {
+    evt.preventDefault();
+    this._callback.renderPopup(filmCard);
+  }
+
+  setPopupHandler(filmCard, queryClasses, callback) {
+    this._callback.renderPopup = callback;
+    for (let queryClass of queryClasses) {
+      this.getElement()
+        .querySelector(queryClass)
+        .addEventListener(`click`, (evt) => this._popupClickHandler(evt, filmCard));
+    }
   }
 }

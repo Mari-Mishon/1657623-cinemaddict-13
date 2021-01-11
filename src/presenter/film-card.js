@@ -14,17 +14,17 @@ export default class FilmCard {
         this
     );
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
-
     this._handlePopupClick = this._handlePopupClick.bind(this);
+    this._handleSubmitComment = this._handleSubmitComment.bind(this);
+    this._handleDeleteComment = this._handleDeleteComment.bind(this);
   }
 
   init(filmCard) {
     const prevFilmCardView = this._filmCardView;
     this._filmCard = filmCard;
 
-    this._filmPopupView = new FilmPopupView();
-
     this._filmCardView = new FilmCardView(filmCard);
+    this._filmPopupView = new FilmPopupView(filmCard);
 
     this._filmCardView.setWatchlistHandler(this._handleWatchlistClick);
     this._filmCardView.setAlreadyWatchedHandler(
@@ -32,54 +32,23 @@ export default class FilmCard {
     );
     this._filmCardView.setFavoriteHandler(this._handleFavoriteClick);
 
-    this._filmCardView.addPopupEvent(
+    this._filmPopupView.setSubmitClickHandler(this._handleSubmitComment);
+    this._filmPopupView.setDeleteClickHandler(this._handleDeleteComment);
+
+    this._filmCardView.setPopupHandler(
+        filmCard,
         [`.film-card__title`, `.film-card__poster`, `.film-card__comments`],
         this._handlePopupClick
     );
-
-    this._filmPopupView.setCloseClickHandler(() => {
-      document.querySelector(`.film-details`).remove();
-      document.body.classList.remove(`hide-overflow`);
-    });
-
-    this._filmPopupView.setEscClickHandler(() => {
-      document.querySelector(`.film-details`).remove();
-      document.body.classList.remove(`hide-overflow`);
-    });
 
     if (prevFilmCardView === null) {
       render(this.filmsContainer, this._filmCardView, RenderPosition.BEFOREEND);
       return;
     }
-
     if (this.filmsContainer.contains(prevFilmCardView.getElement())) {
       replace(this._filmCardView, prevFilmCardView);
     }
-
     remove(prevFilmCardView);
-  }
-
-  destroy() {
-    remove(this._filmCardView);
-  }
-
-  _renderPopup() {
-    this._filmPopupView.init();
-
-    document.body.classList.add(`hide-overflow`);
-
-    render(
-        document.body,
-        this._filmPopupView.getElement(),
-        RenderPosition.BEFOREEND
-    );
-  }
-
-  _handlePopupClick() {
-    if (document.querySelector(`.film-details`) !== null) {
-      this._filmPopupView.closePopup();
-    }
-    return this._renderPopup();
   }
 
   _handleWatchlistClick() {
@@ -104,5 +73,43 @@ export default class FilmCard {
           favorite: !this._filmCard.favorite,
         })
     );
+  }
+
+  _handleSubmitComment(comment) {
+    this._updateInitHandler(
+        Object.assign({}, this._filmCard, {
+          comments: this._filmCard.comments.concat(comment),
+        })
+    );
+  }
+
+  _handleDeleteComment(id) {
+    this._updateInitHandler(
+        Object.assign({}, this._filmCard, {
+          comments: this._filmCard.comments.filter((comment) => comment.id != id),
+        })
+    );
+  }
+
+  _renderPopup(filmCard) {
+    this._filmPopupView.init(filmCard);
+    document.body.classList.add(`hide-overflow`);
+    render(
+        document.body,
+        this._filmPopupView.getElement(),
+        RenderPosition.BEFOREEND
+    );
+    this._filmPopupView.restoreHandlers();
+  }
+
+  _handlePopupClick(filmCard) {
+    if (document.querySelector(`.film-details`) !== null) {
+      this._filmPopupView.closePopup();
+    }
+    return this._renderPopup(filmCard);
+  }
+
+  destroy() {
+    remove(this._filmCardView);
   }
 }

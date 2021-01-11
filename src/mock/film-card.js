@@ -3,8 +3,8 @@ import {getRandomInteger} from "../utils/common.js";
 import {getRandomBoolean} from "../utils/common.js";
 import {getRandomFloat} from "../utils/common.js";
 
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
-
+export const generateId = () =>
+  Date.now() + parseInt(Math.random() * 10000, 10);
 
 const generateTitle = () => {
   const titles = [
@@ -36,11 +36,15 @@ const generatePoster = () => {
   return posters[randomIndex];
 };
 
-const generateDate = () => {
-  const maxYearsGap = 40;
-  const yearsGap = getRandomInteger(-maxYearsGap, 0);
+const generateFullDate = () => {
+  const maxDaysGap = 5400;
+  const DaysGap = getRandomInteger(-maxDaysGap, 0);
 
-  return dayjs().add(yearsGap, `year`).format(`YYYY`);
+  return dayjs().add(DaysGap, `day`).format(`DD MMMM YYYY`);
+};
+
+const generateDate = (fullDate) => {
+  return dayjs(fullDate).format(`YYYY`);
 };
 
 const generateDuration = () => {
@@ -92,20 +96,62 @@ const generateWatched = (watchList) => {
   return watched;
 };
 
+const generateAge = () => {
+  const age = getRandomInteger(0, 18);
+  return age;
+};
+
+const generateListComments = () => {
+  return [
+    {
+      id: generateId(),
+      emoji: `./images/emoji/angry.png`,
+      message: `Hello.world!`,
+      authorName: `Peter Jackson`,
+      messageDate: dayjs().format(`DD MMMM YYYY`),
+    },
+    {
+      id: generateId(),
+      emoji: `./images/emoji/angry.png`,
+      message: `Hello.world2!`,
+      authorName: `Petedasdasdr Jackson`,
+      messageDate: dayjs().format(`DD MMMM YYYY`),
+    },
+    {
+      id: generateId(),
+      emoji: `./images/emoji/angry.png`,
+      message: `Hello.world4!`,
+      authorName: `Peter Jagfgfckson`,
+      messageDate: dayjs().format(`DD MMMM YYYY`),
+    },
+    {
+      id: generateId(),
+      emoji: `./images/emoji/angry.png`,
+      message: `Hello.world3!`,
+      authorName: `Peter Jackson`,
+      messageDate: dayjs().format(`DD MMMM YYYY`),
+    },
+  ];
+};
+
 export const generateFilmCard = () => {
   const watchList = generateWatchList();
+  const fullDate = generateFullDate();
   return {
     id: generateId(),
     title: generateTitle(),
     poster: generatePoster(),
-    releaseDate: generateDate(),
+    releaseDate: generateDate(fullDate),
+    releaseFullDate: fullDate,
     duringTime: generateDuration(),
     rating: generateRaiting(),
     genre: generateGenre(),
     description: generateDescription(),
     commentsAmount: generateCommentsAmount(),
+    age: generateAge(),
     watchList,
     watched: generateWatched(watchList),
     favorite: getRandomBoolean(),
+    comments: generateListComments(),
   };
 };
