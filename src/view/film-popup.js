@@ -1,5 +1,7 @@
 import SmartView from "./smart.js";
-import {generateId} from "../mock/film-card.js";
+import {generateId, generateCommentName} from "../mock/film-card.js";
+import dayjs from "dayjs";
+
 const transformDataToTemplate = (comment) => {
   return `
   <li class="film-details__comment">
@@ -19,9 +21,8 @@ const transformDataToTemplate = (comment) => {
 };
 
 const createFilmPopupTemplate = (filmCard, data) => {
-  console.log(data)
   const commentsList = data.comments;
-  // console.log(commentsList);
+
   return `
     <section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -112,7 +113,9 @@ const createFilmPopupTemplate = (filmCard, data) => {
             />
             <label
               for="watchlist"
-              class="film-details__control-label film-details__control-label--watchlist"
+              class="film-details__control-label ${
+  filmCard.watchList ? `film-details__watched-status--active` : ``
+} film-details__control-label--watchlist"
               >Add to watchlist</label
             >
 
@@ -124,7 +127,9 @@ const createFilmPopupTemplate = (filmCard, data) => {
             />
             <label
               for="watched"
-              class="film-details__control-label film-details__control-label--watched"
+              class="film-details__control-label ${
+  filmCard.watched ? `film-details__watched-status--active` : ``
+} film-details__control-label--watched"
               >Already watched</label
             >
 
@@ -136,7 +141,9 @@ const createFilmPopupTemplate = (filmCard, data) => {
             />
             <label
               for="favorite"
-              class="film-details__control-label film-details__control-label--favorite"
+              class="film-details__control-label ${
+  filmCard.favorite ? `film-details__watched-status--active` : ``
+} film-details__control-label--favorite"
               >Add to favorites</label
             >
           </section>
@@ -158,7 +165,7 @@ const createFilmPopupTemplate = (filmCard, data) => {
   <div class="film-details__new-comment">
     <div class="film-details__add-emoji-label">
     ${
-  data.emoji
+  data.emoji !== null
     ? `<img src="./images/emoji/${data.emoji}.png" width ="55" height = "55">`
     : ``
 }
@@ -250,7 +257,8 @@ export default class Popup extends SmartView {
       textarea: ``,
       comments: filmCard.comments,
     };
-    window._data = this._data;
+
+    this._closeClickHandler = this._closeClickHandler.bind(this);
     this._emojiClickHandler = this._emojiClickHandler.bind(this);
     this._submitClickHandler = this._submitClickHandler.bind(this);
     this._textInputHandler = this._textInputHandler.bind(this);
@@ -333,17 +341,17 @@ export default class Popup extends SmartView {
   }
 
   _submitClickHandler(evt) {
-    if (evt.ctrlKey && (evt.keyCode === 0xa || evt.keyCode === 0xd)) {
+    if (evt.ctrlKey && (evt.keyCode === 0xa || evt.keyCode === 0xd) && this._data.emoji) {
       const comment = {
         id: generateId(),
         emoji: `./images/emoji/` + this._data.emoji + `.png`,
         message: this._data.textarea,
-        authorName: `OEOE`,
-        messageDate: `DD YY`,
+        authorName: generateCommentName(),
+        messageDate: dayjs().format(`YYYY/MM/DD HH:mm`),
       };
       evt.preventDefault();
       this._callback._handleSubmitClick(comment);
-      this.updateData({comments: this.filmCard.comments.concat(comment)});
+      this.updateData({textarea: ``, emoji: null, comments: this._data.comments.concat(comment)});
     }
   }
 
@@ -367,7 +375,7 @@ export default class Popup extends SmartView {
 
     this.updateData({
       comments: this._data.comments.filter(
-          (comment) => comment.id != evt.target.id
+          (comment) => comment.id !== Number(evt.target.id)
       ),
     });
   }

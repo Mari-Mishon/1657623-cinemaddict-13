@@ -32,9 +32,6 @@ export default class FilmCard {
     );
     this._filmCardView.setFavoriteHandler(this._handleFavoriteClick);
 
-    this._filmPopupView.setSubmitClickHandler(this._handleSubmitComment);
-    this._filmPopupView.setDeleteClickHandler(this._handleDeleteComment);
-
     this._filmCardView.setPopupHandler(
         filmCard,
         [`.film-card__title`, `.film-card__poster`, `.film-card__comments`],
@@ -81,18 +78,24 @@ export default class FilmCard {
           comments: this._filmCard.comments.concat(comment),
         })
     );
+    this._filmPopupView.init(this._filmCard);
   }
 
   _handleDeleteComment(id) {
     this._updateInitHandler(
         Object.assign({}, this._filmCard, {
-          comments: this._filmCard.comments.filter((comment) => comment.id != id),
+          comments: this._filmCard.comments.filter(
+              (comment) => comment.id !== Number(id)
+          ),
         })
     );
+    this._filmPopupView.init(this._filmCard);
   }
 
   _renderPopup(filmCard) {
     this._filmPopupView.init(filmCard);
+    this._filmPopupView.setSubmitClickHandler(this._handleSubmitComment);
+    this._filmPopupView.setDeleteClickHandler(this._handleDeleteComment);
     document.body.classList.add(`hide-overflow`);
     render(
         document.body,

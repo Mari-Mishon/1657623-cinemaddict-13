@@ -101,35 +101,57 @@ const generateAge = () => {
   return age;
 };
 
+export const generateCommentName = () => {
+  const names = [
+    `Yoda`,
+    `Jack Sparrow`,
+    `Captain Kirk`,
+    `Spock`,
+    `Optimus Prime`,
+    `Gandalf`,
+    `Inigo Montoya`,
+    `Magneto`,
+    `Tony Stark`,
+    `Bilbo Baggins`,
+    `Legolas`,
+    `Inspector Clouseau`,
+    `Obi Wan`,
+  ];
+
+  const randomIndex = getRandomInteger(0, names.length - 1);
+
+  return names[randomIndex];
+};
+
 const generateListComments = () => {
   return [
     {
       id: generateId(),
-      emoji: `./images/emoji/angry.png`,
+      emoji: `./images/emoji/sleeping.png`,
       message: `Hello.world!`,
       authorName: `Peter Jackson`,
-      messageDate: dayjs().format(`DD MMMM YYYY`),
+      messageDate: dayjs().format(`YYYY/MM/DD HH:mm`),
     },
     {
       id: generateId(),
-      emoji: `./images/emoji/angry.png`,
+      emoji: `./images/emoji/puke.png`,
       message: `Hello.world2!`,
       authorName: `Petedasdasdr Jackson`,
-      messageDate: dayjs().format(`DD MMMM YYYY`),
+      messageDate: dayjs().format(`YYYY/MM/DD HH:mm`),
     },
     {
       id: generateId(),
       emoji: `./images/emoji/angry.png`,
       message: `Hello.world4!`,
       authorName: `Peter Jagfgfckson`,
-      messageDate: dayjs().format(`DD MMMM YYYY`),
+      messageDate: dayjs().format(`YYYY/MM/DD HH:mm`),
     },
     {
       id: generateId(),
-      emoji: `./images/emoji/angry.png`,
+      emoji: `./images/emoji/smile.png`,
       message: `Hello.world3!`,
       authorName: `Peter Jackson`,
-      messageDate: dayjs().format(`DD MMMM YYYY`),
+      messageDate: dayjs().format(`YYYY/MM/DD HH:mm`),
     },
   ];
 };
@@ -153,5 +175,6 @@ export const generateFilmCard = () => {
     watched: generateWatched(watchList),
     favorite: getRandomBoolean(),
     comments: generateListComments(),
+    name: generateCommentName(),
   };
 };
